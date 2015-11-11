@@ -25,57 +25,57 @@ void loop() {
 
         set_color( BUTTON_PIN3 );
         set_intensity( BUTTON_PIN1, 10 ,5 );
-        set_intensity( BUTTON_PIN2, 1 ,50 );
+        set_intensity( BUTTON_PIN2, 1 ,100 );
 
 }
 void set_color(uint16_t button_pin) {
         bool newState = digitalRead(button_pin);
         if (newState == LOW && oldState == HIGH) {
-              delay(1);
-                      newState = digitalRead(button_pin);
-                      if (newState == LOW) {  
-                              if (bpit > 4) {
-                                      bpit=0;
-                              }
-                              switch(bpit) {
-                                      case 0: rp=1; gp=0; bp=0; //red
-                                      break;  
-                                      case 2: rp=0; gp=0; bp=1; //blue
-                                      break; 
-                                      case 3: rp=1; gp=0; bp=1; //purple
-                                      break;    
-                                      case 1: rp=0; gp=1; bp=0; //green
-                                      break;                                               
-                                      case 4: rp=1; gp=1; bp=1; //white
-                                      break;   
-                              }
-                              bpit++;
-                              r=lint*rp; g=lint*gp; b=lint*bp;                                
-                              changeli(r,g,b,0);
-                      }
-        }  
+                delay(1);
+                newState = digitalRead(button_pin);
+                if (newState == LOW) {  
+                        if (bpit > 4) {
+                                bpit=0;
+                        }
+                        switch(bpit) {
+                                case 0: rp=1; gp=0; bp=0; //red
+                                break;  
+                                case 2: rp=0; gp=0; bp=1; //blue
+                                break; 
+                                case 3: rp=1; gp=0; bp=1; //purple
+                                break;    
+                                case 1: rp=0; gp=1; bp=0; //green
+                                break;                                               
+                                case 4: rp=1; gp=1; bp=1; //white
+                                break;   
+                        }
+                        bpit++;
+                        r=lint*rp; g=lint*gp; b=lint*bp;                                
+                        changeli(r,g,b,0);
+                }
+          }  
 }
 void set_intensity(uint16_t button_pin, uint16_t lstep, uint16_t range) {
         bool newState = digitalRead(button_pin);
         if (newState == LOW && oldState == HIGH) {
-              delay(1);
-                      newState = digitalRead(button_pin);
-                      if (newState == LOW) { 
-                                dlevel++;                                               
-                                if ( ((dlevel > range) || (dlevel <= 0)) && (button_pin == BUTTON_PIN1)) {
-                                        lint=0;
-                                        dlevel=0;
-                                } else {
-                                        lint+=lstep;                          
-                                }
-                                //Serial.println(dlevel,DEC);
-                                if ((dlevel == range) && (button_pin == BUTTON_PIN1)) {
-                                        lint=255;
-                                        dlevel=-1;
-                                }                        
-                                r=lint*rp; g=lint*gp; b=lint*bp;                                
-                                changeli(r,g,b,0);                                      
-                      }
+                delay(1);
+                newState = digitalRead(button_pin);
+                if (newState == LOW) { 
+                          dlevel++;                                               
+                          if ((dlevel > range) || (dlevel <= 0)) {
+                                  lint=0;
+                                  dlevel=0;
+                          } else {
+                                  lint+=lstep;                          
+                          }
+                          //Serial.println(dlevel,DEC);
+                          if (dlevel == range) {
+                                  lint=255;
+                                  dlevel=-1;
+                          }                        
+                          r=lint*rp; g=lint*gp; b=lint*bp;                                
+                          changeli(r,g,b,0);                                      
+                }
         }
 }
 void changeli(uint16_t r, uint16_t g, uint16_t b, uint8_t wait) { //change light intensity
