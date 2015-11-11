@@ -22,62 +22,59 @@ void setup() {
         strip.show(); // Initialize all pixels to 'off'
 }
 void loop() {
-        read_button(BUTTON_PIN3,1); 
-        read_button(BUTTON_PIN1,1);
-        read_button(BUTTON_PIN2,1);          
+
+        set_color( BUTTON_PIN3 );
+        set_intensity( BUTTON_PIN1, 10 ,5 );
+        set_intensity( BUTTON_PIN2, 1 ,50 );
 
 }
-void read_button(uint16_t button_pin, bool level) { //read button and change intesity of light
+void set_color(uint16_t button_pin) {
         bool newState = digitalRead(button_pin);
         if (newState == LOW && oldState == HIGH) {
               delay(1);
                       newState = digitalRead(button_pin);
-                      if (newState == LOW) {
-                              if (button_pin == BUTTON_PIN3) {
-                                      r=lint; g=0; b=0;
-                                      if (bpit > 4) {
-                                              bpit=0;
-                                      }
-                                      switch(bpit) {
-                                              case 0: rp=1; gp=0; bp=0; //red
-                                              break;  
-                                              case 2: rp=0; gp=0; bp=1; //blue
-                                              break; 
-                                              case 3: rp=1; gp=0; bp=1; //purple
-                                              break;    
-                                              case 1: rp=0; gp=1; bp=0; //green
-                                              break;                                               
-                                              case 4: rp=1; gp=1; bp=1; //white
-                                              break;   
-                                      }
-                                      bpit++;                                      
-                              } else {
-                                      if (button_pin == BUTTON_PIN2) lstep=1;
-                                      if (button_pin == BUTTON_PIN1) lstep=10;
-                                      if (level == 1) {
-                                              dlevel++;
-                                      } else {
-                                              dlevel--;
-                                      }
-                                                            
-                                      if ( ((dlevel > 5) || (dlevel <= 0)) && (button_pin == BUTTON_PIN1)) {
-                                              lint=0;
-                                              dlevel=0;
-                                      } else {                          
-                                              if (level == 1) {
-                                                      lint+=lstep;
-                                              } else {
-                                                      lint-=lstep;
-                                              }
-                                      }
-                                      //Serial.println(dlevel,DEC);
-                                      if ((dlevel == 5) && (button_pin == BUTTON_PIN1)) {
-                                              lint=255;
-                                              dlevel=-1;
-                                      }
+                      if (newState == LOW) {  
+                              if (bpit > 4) {
+                                      bpit=0;
                               }
+                              switch(bpit) {
+                                      case 0: rp=1; gp=0; bp=0; //red
+                                      break;  
+                                      case 2: rp=0; gp=0; bp=1; //blue
+                                      break; 
+                                      case 3: rp=1; gp=0; bp=1; //purple
+                                      break;    
+                                      case 1: rp=0; gp=1; bp=0; //green
+                                      break;                                               
+                                      case 4: rp=1; gp=1; bp=1; //white
+                                      break;   
+                              }
+                              bpit++;
                               r=lint*rp; g=lint*gp; b=lint*bp;                                
                               changeli(r,g,b,0);
+                      }
+        }  
+}
+void set_intensity(uint16_t button_pin, uint16_t lstep, uint16_t range) {
+        bool newState = digitalRead(button_pin);
+        if (newState == LOW && oldState == HIGH) {
+              delay(1);
+                      newState = digitalRead(button_pin);
+                      if (newState == LOW) { 
+                                dlevel++;                                               
+                                if ( ((dlevel > range) || (dlevel <= 0)) && (button_pin == BUTTON_PIN1)) {
+                                        lint=0;
+                                        dlevel=0;
+                                } else {
+                                        lint+=lstep;                          
+                                }
+                                //Serial.println(dlevel,DEC);
+                                if ((dlevel == range) && (button_pin == BUTTON_PIN1)) {
+                                        lint=255;
+                                        dlevel=-1;
+                                }                        
+                                r=lint*rp; g=lint*gp; b=lint*bp;                                
+                                changeli(r,g,b,0);                                      
                       }
         }
 }
